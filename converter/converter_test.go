@@ -1,7 +1,6 @@
 package converter
 
 import (
-	"reflect"
 	"testing"
 	"time"
 
@@ -113,6 +112,7 @@ func Test_mtcFromMSD(t *testing.T) {
 }
 
 func TestConverter_EarthTimeToMarsTime(t *testing.T) {
+	const delta = 0.0005
 	type fields struct {
 		LeapSecondsData leap_seconds.LeapSecondsData
 	}
@@ -130,8 +130,7 @@ func TestConverter_EarthTimeToMarsTime(t *testing.T) {
 			fields: fields{sampleLeapSecondsData},
 			args:   args{time.Date(2020, time.July, 19, 3, 22, 2, 0, time.UTC)},
 			want: MarsTime{
-				MarsSolDate:            52095.46858,
-				MartianCoordinatedTime: "11:14:46",
+				MarsSolDate: 52095.46858,
 			},
 		},
 		{
@@ -139,8 +138,7 @@ func TestConverter_EarthTimeToMarsTime(t *testing.T) {
 			fields: fields{sampleLeapSecondsData},
 			args:   args{time.Date(2020, time.July, 30, 13, 54, 35, 0, time.UTC)},
 			want: MarsTime{
-				MarsSolDate:            52106.60179,
-				MartianCoordinatedTime: "14:26:35",
+				MarsSolDate: 52106.60179,
 			},
 		},
 	}
@@ -149,8 +147,9 @@ func TestConverter_EarthTimeToMarsTime(t *testing.T) {
 			c := Converter{
 				LeapSecondsData: tt.fields.LeapSecondsData,
 			}
-			if got := c.EarthTimeToMarsTime(tt.args.earth); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("EarthTimeToMarsTime() = %v, want %v", got, tt.want)
+			got := c.EarthTimeToMarsTime(tt.args.earth)
+			if diff := got.MarsSolDate - tt.want.MarsSolDate; diff > delta {
+				t.Errorf("EarthTimeToMarsTime() = %v, want %v, delta %v", got.MarsSolDate, tt.want.MarsSolDate, diff)
 			}
 		})
 	}
