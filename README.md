@@ -15,3 +15,15 @@ Expected body:
 }
 ```
 Date should be in the RFC3339 format.
+
+## Docker image
+
+Use the Docker image to test locally or deploy to an environment.
+
+### Build
+
+`docker build -t mars-time .`
+
+### Run
+
+`docker run --rm -ti -p 8080:8080 mars-time`
