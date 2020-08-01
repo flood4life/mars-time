@@ -42,7 +42,7 @@ var sampleLeapSecondsData = leap_seconds.LeapSecondsData{
 	},
 }
 
-func Test_mtcFromMSD(t *testing.T) {
+func Test_MTCFromMSD(t *testing.T) {
 	type args struct {
 		msd float64
 	}
@@ -104,8 +104,8 @@ func Test_mtcFromMSD(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := mtcFromMSD(tt.args.msd); got != tt.want {
-				t.Errorf("mtcFromMSD() = %v, want %v", got, tt.want)
+			if got := MTCFromMSD(tt.args.msd); got != tt.want {
+				t.Errorf("MTCFromMSD() = %v, want %v", got, tt.want)
 			}
 		})
 	}

@@ -25,18 +25,19 @@ type Converter struct {
 }
 
 func (c Converter) EarthTimeToMarsTime(earth time.Time) MarsTime {
-	msd := c.msdFromUnixEpoch(earth.Unix())
+	msd := c.MSDFromUnixEpoch(earth.Unix())
 	return MarsTime{
 		MarsSolDate:            msd,
-		MartianCoordinatedTime: mtcFromMSD(msd),
+		MartianCoordinatedTime: MTCFromMSD(msd),
 	}
 }
 
-func (c Converter) msdFromUnixEpoch(epoch int64) float64 {
+func (c Converter) MSDFromUnixEpoch(epoch int64) float64 {
+	// taken from https://en.wikipedia.org/wiki/Timekeeping_on_Mars#Formulas_to_compute_MSD_and_MTC
 	return (float64(epoch)+c.LeapSecondsData.TAIUTCDiff(epoch))/88775.244147 + 34127.2954262
 }
 
-func mtcFromMSD(msd float64) string {
+func MTCFromMSD(msd float64) string {
 	fraction := math.Mod(msd, 1)
 	if fraction < 0 {
 		fraction = 1 + fraction
