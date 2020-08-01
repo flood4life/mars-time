@@ -48,6 +48,11 @@ func (s MarsTimeServer) ConvertHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if r.Header.Get(http.CanonicalHeaderKey("Content-Type")) != "application/json" {
+		w.WriteHeader(http.StatusUnsupportedMediaType)
+		return
+	}
+
 	var request MarsTimeRequest
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
