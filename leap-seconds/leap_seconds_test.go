@@ -1,6 +1,7 @@
 package leap_seconds
 
 import (
+	"math"
 	"testing"
 	"time"
 )
@@ -192,5 +193,43 @@ func TestLeapSecondsData_TAIUTCDiff(t *testing.T) {
 				t.Errorf("TAIUTCDiff() = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func TestLeapSecondsData_TAIUTCDiff_BeforeFirstLeapSecondsEntryUsesFormula(t *testing.T) {
+	d := sampleLeapSecondsData
+	date := time.Date(1900, time.January, 1, 0, 0, 0, 0, time.UTC).Unix()
+	firstTableEntryDiff := 42.184
+	if got := d.TAIUTCDiff(date); got == firstTableEntryDiff {
+		t.Errorf("TAIUTCDiff() = %v, do not want that", got)
+	}
+}
+
+func TestLeapSecondsData_TAIUTCDiff_AfterExpiryDateUsesFormula(t *testing.T) {
+	d := sampleLeapSecondsData
+	date := time.Date(2200, time.January, 1, 0, 0, 0, 0, time.UTC).Unix()
+	lastTableEntryDiff := 69.184
+	if got := d.TAIUTCDiff(date); got == lastTableEntryDiff {
+		t.Errorf("TAIUTCDiff() = %v, do not want that", got)
+	}
+}
+
+func TestLeapSecondsData_TAIUTCDiff_UsesFormulaIfDataIsEmpty(t *testing.T) {
+	d := LeapSecondsData{}
+	date := time.Date(2019, time.January, 1, 0, 0, 0, 0, time.UTC).Unix()
+	lastTableEntryDiff := 69.184
+	if got := d.TAIUTCDiff(date); got == lastTableEntryDiff {
+		t.Errorf("TAIUTCDiff() = %v, do not want that", got)
+	}
+}
+
+func TestLeapSecondsData_TAIUTCDiff_EmpiricalFormulaIsAccurateEnough(t *testing.T) {
+	d := LeapSecondsData{}
+	date := time.Date(2019, time.January, 1, 0, 0, 0, 0, time.UTC).Unix()
+	lastTableEntryDiff := 69.184
+	acceptableDelta := 5.0 // 5 seconds
+	got := d.TAIUTCDiff(date)
+	if delta := math.Abs(got - lastTableEntryDiff); delta > acceptableDelta {
+		t.Errorf("TAIUTCDiff() = %v, want close to %v, delta: %v", got, lastTableEntryDiff, delta)
 	}
 }
