@@ -16,6 +16,20 @@ Expected body:
 ```
 Date should be in the RFC3339 format.
 
+Response:
+```json
+{
+  "msd": 50000.0001,
+  "mtc": "00:00:01"
+}
+```
+
+#### Example curl request
+
+Request: `curl -d '{"earth": "2020-08-01T03:44:56+00:00"}' -H 'Content-Type: application/json' http://localhost:8080/api/v1/convert`
+
+Response: `{"msd":52108.13664924256,"mtc":"03:16:47"}`
+
 ## Docker image
 
 Use the Docker image to test locally or deploy to an environment.
