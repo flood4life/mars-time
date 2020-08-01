@@ -27,3 +27,8 @@ Use the Docker image to test locally or deploy to an environment.
 ### Run
 
 `docker run --rm -ti -p 8080:8080 mars-time`
+
+## Local development
+
+1. Make sure Go is installed
+2. `go test ./...` to run the test suite
